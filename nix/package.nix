@@ -21,6 +21,13 @@
     mimeType = [ "x-scheme-handler/cfauth" ];
   };
 
+  appimageRunCustom = pkgs.appimage-run.override {
+    extraPkgs = pkgs: with pkgs; [
+      libsecret
+      glib
+    ];
+  };
+
   icons =
     pkgs.runCommand "${pname}-icons" {
       nativeBuildInputs = with pkgs; [binutils squashfsTools];
