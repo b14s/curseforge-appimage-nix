@@ -64,23 +64,27 @@ in
       makeWrapper ${appimageRunCustom}/bin/appimage-run \
         "$out/bin/${pname}" \
         --add-flags "$out/share/${pname}/${pname}.AppImage" \
-        --set ELECTRON_SKIP_BINARY_PROTOCOL_REGISTRATION "1" \ 
-          --set XDG_DATA_HOME "\$HOME/.local/share" \
-          --run '
-            XDG_DATA_DIRS_CLEAN=""
-            IFS=":" read -ra ADDR <<< "$XDG_DATA_DIRS"
-            for i in "''${ADDR[@]}"; do
-              if [ -d "$i" ]; then
-                if [ -z "$XDG_DATA_DIRS_CLEAN" ]; then
-                  XDG_DATA_DIRS_CLEAN="$i"
-                else
-                  XDG_DATA_DIRS_CLEAN="$XDG_DATA_DIRS_CLEAN:$i"
-                fi
+        --set XDG_DATA_HOME "\$HOME/.local/share" \
+        --set XDG_CONFIG_HOME "\$HOME/.config" \
+        --run '
+          XDG_DATA_DIRS_CLEAN=""
+          IFS=":" read -ra ADDR <<< "$XDG_DATA_DIRS"
+          for i in "''${ADDR[@]}"; do
+            if [ -d "$i" ]; then
+              if [ -z "$XDG_DATA_DIRS_CLEAN" ]; then
+                XDG_DATA_DIRS_CLEAN="$i"
+              else
+                XDG_DATA_DIRS_CLEAN="$XDG_DATA_DIRS_CLEAN:$i"
               fi
-            done
-            export XDG_DATA_DIRS="$XDG_DATA_DIRS_CLEAN"
-          ' \
-        --extra-flags '"$@"' 
+            fi
+          done
+          export XDG_DATA_DIRS="$XDG_DATA_DIRS_CLEAN"
+
+          if [ -z "$XDG_RUNTIME_DIR" ]; then
+            export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+          fi
+        ' \
+        --extra-flags '"$@"'
         
         # XDG desktop entry (discovered via $XDG_DATA_DIRS).
         install -Dm644 ${desktopFile}/share/applications/${pname}.desktop \
