@@ -15,9 +15,10 @@
     desktopName = desktopEntry.name;
     comment = desktopEntry.comment;
     icon = desktopEntry.icon;
-    exec = pname;
+    exec = "${pname} %u";
     terminal = false;
     categories = desktopEntry.categories;
+    mimeType = [ "x-scheme-handler/cfauth" ];
   };
 
   icons =
