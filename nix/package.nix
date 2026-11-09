@@ -64,7 +64,8 @@ in
       makeWrapper ${pkgs.appimage-run}/bin/appimage-run \
         "$out/bin/${pname}" \
         --add-flags "$out/share/${pname}/${pname}.AppImage"
-
+        --extra-flags '"$@"' 
+        
         # XDG desktop entry (discovered via $XDG_DATA_DIRS).
         install -Dm644 ${desktopFile}/share/applications/${pname}.desktop \
           "$out/share/applications/${pname}.desktop"
