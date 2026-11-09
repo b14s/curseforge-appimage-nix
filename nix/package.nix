@@ -63,7 +63,8 @@ in
       # handles extracting/mounting the archive at runtime.
       makeWrapper ${pkgs.appimage-run}/bin/appimage-run \
         "$out/bin/${pname}" \
-        --add-flags "$out/share/${pname}/${pname}.AppImage"
+        --add-flags "$out/share/${pname}/${pname}.AppImage" \
+        --set ELECTRON_SKIP_BINARY_PROTOCOL_REGISTRATION "1" \ 
         --extra-flags '"$@"' 
         
         # XDG desktop entry (discovered via $XDG_DATA_DIRS).
